@@ -1,26 +1,30 @@
 <template>
   <div class="app-container">
-    <nav class="nav">
-      <router-link to="/about" class="router-link">About Me</router-link>
-      <router-link to="/" class="router-link">Lift Simulator</router-link>
-    </nav>
+    <NavBar />
     <div class="content-wrapper">
-      <router-view></router-view>
+      <router-view class="fade-in"></router-view>
     </div>
   </div>
 </template>
 
-
 <script>
-import router from './router'
+import NavBar from '@/components/welcomeComponents/NavBar.vue'
 
 export default {
   name: 'App',
-  router
+  components: {
+    NavBar
+  }
 }
 </script>
+
 <style>
-/* Общие стили */
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -33,38 +37,29 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #060606;
 }
 
-/* Стили для навигационной панели */
-.nav {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  background-color: #4CAF50;
-  padding: 1rem 0;
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
-}
-
-.router-link {
-  font-size: 1.2rem;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.router-link:hover {
-  text-decoration: underline;
-}
-
-/* Стили для содержимого страницы */
 .content-wrapper {
   display: flex;
   flex-direction: column;
+  color: #866fdb;
   align-items: center;
   margin-top: 2rem;
 }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation-name: fadeIn;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
 </style>
-
-
-

@@ -7,7 +7,13 @@
       class="vue-logo"
     />
     <p></p>
-    <a href="https://github.com/babymama111" class="github-link" target="_blank" rel="noopener noreferrer">My GitHub Profile</a>
+    <a
+      href="https://github.com/babymama111"
+      class="github-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      >My GitHub Profile</a
+    >
   </div>
 </template>
 
@@ -60,7 +66,6 @@ p {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Определение анимации fadeIn */
 @keyframes fadeIn {
   0% {
     opacity: 0;
