@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/lift',
       name: 'lift',
-      component: () => import('../components/Lift.vue')
+      component: () => import('../components/LiftItem.vue')
     }
   ]
 })

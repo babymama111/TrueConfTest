@@ -17,7 +17,7 @@ export default {
   }
 }
 </script>
-
+<!-- 
 <style>
 html,
 body {
@@ -62,4 +62,4 @@ body {
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
 }
-</style>
+</style> -->

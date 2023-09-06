@@ -1,7 +1,7 @@
 <template>
   <nav class="nav fade-in">
-    <router-link to="/" class="router-link fade-in">About Me</router-link>
-    <router-link to="/lift" class="router-link fade-in">Lift Simulator</router-link>
+    <router-link to="/" class="router-link fade-in">Обо мне</router-link>
+    <router-link to="/lift" class="router-link fade-in">Симулятор Лифта</router-link>
   </nav>
 </template>
 

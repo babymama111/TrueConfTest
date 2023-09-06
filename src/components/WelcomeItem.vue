@@ -24,14 +24,14 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #000000;
+  background-color: #faf6f6;
 }
 
 h1 {
   font-size: 4rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #fffbfb;
+  color: #014379;
   animation: fadeIn 2s;
 }
 
@@ -52,10 +52,10 @@ p {
 
 .github-link {
   font-size: 1.2rem;
-  color: #ffffff;
+  color: #014379;
   text-decoration: none;
   margin-top: 1rem;
-  border: 2px solid #ffffff;
+  border: 2px solid #014379;
   border-radius: 5px;
   padding: 0.5rem 1rem;
   transition: background-color 0.3s ease-in-out;
@@ -63,7 +63,7 @@ p {
 }
 
 .github-link:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(249, 248, 248, 0.2);
 }
 
 @keyframes fadeIn {
