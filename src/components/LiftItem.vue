@@ -1,6 +1,6 @@
 <template>
   <div id="lift">
-    <ElevatorItem> </ElevatorItem>
+    <ElevatorItem class="elevator-item"> </ElevatorItem>
   </div>
 </template>
 
@@ -16,12 +16,26 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+
 #lift {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font-family: 'Roboto', sans-serif;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 70px;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.elevator-item {
+  opacity: 0;
+  animation: fadeIn 3s ease-out forwards;
 }
 </style>
