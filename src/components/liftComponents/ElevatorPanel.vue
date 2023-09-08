@@ -2,17 +2,25 @@
   <div class="elevator-panel">
     <h4>{{ elevName }}</h4>
     <div>
-      <div class="elevator-door">
+      <div
+        class="elevator-door"
+        :class="{ open: doorsStatus === 'open', close: doorsStatus === 'close' }"
+      >
         {{ doorsStatus }}
       </div>
       <div class="floor-display">{{ displayFloor }}</div>
       <div class="floor-buttons">
-        <button v-for="floor in floorNum" :key="floor" @click="clickFloorButton(floor)" :class="getButtonClass(floor)">
+        <button
+          v-for="floor in floorNum"
+          :key="floor"
+          @click="clickFloorButton(floor)"
+          :class="getButtonClass(floor)"
+        >
           {{ displayButtonNumber(floor) }}
         </button>
       </div>
       <div class="emergency-buttons">
-        <button @click="clickEmergencyButton" :class="{active: emergencyActive}">
+        <button @click="clickEmergencyButton" :class="{ active: emergencyActive }">
           Экстренный вызов
         </button>
       </div>
@@ -22,12 +30,13 @@
 
 <script>
 export default {
-  name: "ElevatorPanel",
+  name: 'ElevatorPanel',
   props: {
     floorNum: Number,
     elevName: String,
     elevIndex: Number
   },
+
   data() {
     return {
       currentFloor: 1,
@@ -39,134 +48,145 @@ export default {
       idle: true,
       targetFloor: 0,
       emergencyActive: false
-    };
+    }
   },
   created() {
-    this.loadState();
+    this.loadState()
   },
   methods: {
+    requestUp: function (floor) {
+      this.clickFloorButton(floor)
+    },
+
+    requestDown: function (floor) {
+      this.clickFloorButton(floor)
+    },
     displayButtonNumber(floor) {
-      return floor < 10 ? "0" + floor : floor;
+      return floor < 10 ? '0' + floor : floor
     },
     getButtonClass(floor) {
       return {
         selected: this.selectedFloors.includes(floor),
-        "floor-button": true
-      };
+        'floor-button': true
+      }
     },
     clickFloorButton(floor) {
       if (!this.selectedFloors.includes(floor) && !this.emergencyActive) {
-        this.selectedFloors.push(floor);
-        this.selectedFloors.sort((a, b) => a - b);
-        this.saveState();
-        this.moveElevator();
+        this.selectedFloors.push(floor)
+        this.selectedFloors.sort((a, b) => a - b)
+        this.saveState()
+        this.moveElevator()
       }
     },
     moveToNextFloor(floorChange) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          this.currentFloor += floorChange;
-          resolve();
-        }, 1000);
-      });
+          this.currentFloor += floorChange
+          resolve()
+        }, 1000)
+      })
     },
     async moveElevator() {
       if (this.idle && this.selectedFloors.length > 0) {
-        this.idle = false;
-        this.targetFloor = this.selectedFloors.shift();
-        let floorChange = this.targetFloor > this.currentFloor ? 1 : -1;
-        this.goingUp = floorChange > 0;
-        this.goingDown = !this.goingUp;
+        this.idle = false
+        this.targetFloor = this.selectedFloors[0]
+        let floorChange = this.targetFloor > this.currentFloor ? 1 : -1
+        this.goingUp = floorChange > 0
+        this.goingDown = !this.goingUp
 
         while (this.currentFloor !== this.targetFloor) {
-          await this.moveToNextFloor(floorChange);
-          this.saveState();
+          await this.moveToNextFloor(floorChange)
+          this.saveState()
         }
+        await this.selectedFloors.shift()
+        await this.$emit('dealtUpRequest', this.currentFloor)
+        await this.$emit('dealtDownRequest', this.currentFloor)
 
-        await this.openDoor();
+        await this.delay(1000)
+        await this.openDoor()
       }
     },
     async openDoor() {
-      this.leftDoorOpen = true;
-      this.rightDoorOpen = true;
-      await this.delay(3000);
+      this.leftDoorOpen = true
+      this.rightDoorOpen = true
+      await this.delay(3000)
 
       if (this.currentFloor === this.targetFloor) {
-        const index = this.selectedFloors.indexOf(this.currentFloor);
+        const index = this.selectedFloors.indexOf(this.currentFloor)
         if (index > -1) {
-          this.selectedFloors.splice(index, 1);
+          this.selectedFloors.splice(index, 1)
         }
       }
 
-      this.saveState();
-      await this.closeDoor();
+      this.saveState()
+      await this.closeDoor()
     },
     async closeDoor() {
-      this.leftDoorOpen = false;
-      this.rightDoorOpen = false;
-      await this.delay(1000);
-      this.goingUp = false;
-      this.goingDown = false;
-      this.idle = true;
+      this.leftDoorOpen = false
+      this.rightDoorOpen = false
+      await this.delay(1000)
+      this.goingUp = false
+      this.goingDown = false
+      this.idle = true
       if (this.selectedFloors.length > 0) {
-        this.moveElevator();
+        this.moveElevator()
       }
     },
     clickEmergencyButton() {
-      this.emergencyActive = !this.emergencyActive;
-      this.saveState();
+      this.emergencyActive = !this.emergencyActive
+      this.saveState()
       if (this.emergencyActive) {
-        this.goingUp = false;
-        this.goingDown = false;
-        this.idle = false;
+        this.goingUp = false
+        this.goingDown = false
+        this.idle = false
       } else {
-        this.idle = true;
-        this.moveElevator();
+        this.idle = true
+        this.moveElevator()
       }
     },
     saveState() {
       const state = {
         currentFloor: this.currentFloor,
         selectedFloors: this.selectedFloors,
-        emergencyActive: this.emergencyActive,
-      };
-
-      let allElevatorsData = localStorage.getItem("elevators");
-      if (allElevatorsData) {
-        allElevatorsData = JSON.parse(allElevatorsData);
-      } else {
-        allElevatorsData = {};
+        emergencyActive: this.emergencyActive
       }
 
-      allElevatorsData["elevator" + this.elevIndex] = state;
+      let allElevatorsData = localStorage.getItem('elevators')
+      if (allElevatorsData) {
+        allElevatorsData = JSON.parse(allElevatorsData)
+      } else {
+        allElevatorsData = {}
+      }
 
-      localStorage.setItem("elevators", JSON.stringify(allElevatorsData));
+      allElevatorsData['elevator' + this.elevIndex] = state
+
+      localStorage.setItem('elevators', JSON.stringify(allElevatorsData))
     },
     loadState() {
-      const allElevatorsData = localStorage.getItem("elevators");
+      const allElevatorsData = localStorage.getItem('elevators')
       if (allElevatorsData) {
-        const elevatorsData = JSON.parse(allElevatorsData);
-        const savedState = elevatorsData["elevator" + this.elevIndex];
+        const elevatorsData = JSON.parse(allElevatorsData)
+        const savedState = elevatorsData['elevator' + this.elevIndex]
         if (savedState) {
-          this.currentFloor = savedState.currentFloor;
-          this.selectedFloors = savedState.selectedFloors;
-          this.emergencyActive = savedState.emergencyActive;
+          this.currentFloor = savedState.currentFloor
+          this.selectedFloors = savedState.selectedFloors
+          this.emergencyActive = savedState.emergencyActive
         }
       }
     },
     delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    },
+      return new Promise((resolve) => setTimeout(resolve, ms))
+    }
   },
   computed: {
     displayFloor() {
-      return this.currentFloor < 10 ? '0' + this.currentFloor : this.currentFloor;
+      return this.currentFloor < 10 ? '0' + this.currentFloor : this.currentFloor
     },
     doorsStatus() {
-      return this.leftDoorOpen && this.rightDoorOpen ? 'open' : 'close';
-    },
-  },
-};
+      return this.leftDoorOpen && this.rightDoorOpen ? 'open' : 'close'
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -183,7 +203,7 @@ export default {
 .elevator-door {
   font-size: 1rem;
   font-weight: bold;
-  background-color: #a6a6a6;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -193,6 +213,13 @@ export default {
   padding: 0.2rem 0.5rem;
   margin-bottom: 5px;
   border-radius: 4px;
+}
+.open {
+  color: green;
+}
+
+.close {
+  color: red;
 }
 
 .floor-display {
@@ -233,4 +260,3 @@ button {
   background-color: #fcd217;
 }
 </style>
-```

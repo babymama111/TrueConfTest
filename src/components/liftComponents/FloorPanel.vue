@@ -56,24 +56,16 @@ export default {
     }
   },
   methods: {
+
     clickButton: function (type) {
-  if (type === 'up') {
-    this.upLighten = true;
-    this.$emit('up-request', { floor: this.currentFloor, direction: 'up' });
-  } else {
-    this.downLighten = true;
-    this.$emit('down-request', { floor: this.currentFloor, direction: 'down' });
-  }
-},
-    // clickButton: function (type) {
-    //   if (type === 'up') {
-    //     this.upLighten = true
-    //     this.$emit('upRequest', this.currentFloor)
-    //   } else {
-    //     this.downLighten = true
-    //     this.$emit('downRequest', this.currentFloor)
-    //   }
-    // },
+      if (type === 'up') {
+        this.upLighten = true
+        this.$emit('upRequest', this.currentFloor)
+      } else {
+        this.downLighten = true
+        this.$emit('downRequest', this.currentFloor)
+      }
+    },
 
     upRequestHandled: function () {
       this.upLighten = false
@@ -83,9 +75,12 @@ export default {
       this.downLighten = false
     },
 
+  
     displayFloor: function () {
- 
-      return '' + this.currentFloor
+      if (("" + this.currentFloor).length === 1) {
+        return "0" + this.currentFloor
+      }
+      return "" + this.currentFloor
     }
   }
 }

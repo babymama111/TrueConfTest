@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <!-- <div>
       <label for="floorNumField">Число этажей:</label>
       <input id="floorNumField" type="number" v-model="tempFloorNum" />
       <button @click="updateFloors">изменить</button>
@@ -9,7 +9,7 @@
       <label for="elevNumField">Число лифтов:</label>
       <input id="elevNumField" type="number" v-model="tempElevNum" />
       <button @click="updateElevators">изменить</button>
-    </div>
+    </div> -->
     <p>Лифт</p>
     <div class="elevator-panels-container">
       <ElevatorPanel
@@ -23,16 +23,20 @@
         @dealtUpRequest="floorUpRequestDealt"
         @upRequest="floorUpRequest"
         @downRequest="floorDownRequest"
+        @downRequestHandled="downRequestHandled"
+        @upRequestHandled="upRequestHandled"
       ></ElevatorPanel>
     </div>
     <p>Вызов лифта</p>
     <div class="floor-panels-container">
       <FloorPanel
-        v-for="fp in floorNum"
+        v-for="fp in this.floorNum"
         :key="'floor-' + fp"
         :current-floor="fp"
         @upRequest="floorUpRequest"
         @downRequest="floorDownRequest"
+        @downRequestHandled="downRequestHandled"
+        @upRequestHandled="upRequestHandled"
         :can-up="floorNum !== fp"
         :can-down="1 !== fp"
         ref="floorPanels"
@@ -54,10 +58,10 @@ export default {
   props: {},
   data() {
     return {
-      elevNum: 1,
-      floorNum: 5,
-      tempElevNum: 1,
-      tempFloorNum: 5,
+      elevNum: parseInt(import.meta.env.VITE_API_ELEVNUM),
+      floorNum: parseInt(import.meta.env.VITE_API_FLOORNUM),
+      // tempElevNum: 1,
+      // tempFloorNum: 5,
       choice: []
     }
   },
@@ -68,14 +72,14 @@ export default {
     }
   },
   methods: {
-    updateFloors() {
-      this.floorNum = Math.min(parseInt(this.tempFloorNum), 150)
-      this.saveSettings()
-    },
-    updateElevators() {
-      this.elevNum = Math.min(parseInt(this.tempElevNum), 50)
-      this.saveSettings()
-    },
+    // updateFloors() {
+    //   this.floorNum = Math.min(parseInt(this.tempFloorNum), 150)
+    //   this.saveSettings()
+    // },
+    // updateElevators() {
+    //   this.elevNum = Math.min(parseInt(this.tempElevNum), 50)
+    //   this.saveSettings()
+    // },
     saveSettings() {
       const settings = {
         floorNum: this.floorNum,
@@ -91,22 +95,29 @@ export default {
         this.elevNum = loadedSettings.elevNum
       }
     },
-    floorUpRequest(floor) {
-      const elevatorIndex = this.findElevatorToDeal(floor, UP)
-      if (elevatorIndex !== undefined) {
-        this.$refs.elevatorList[elevatorIndex].requestUp(floor)
+
+    floorUpRequest: function (floor) {
+      let i = this.findElevatorToDeal(floor, UP)
+      console.log('Requesting to ', i, ' elevator')
+      if (i !== undefined) {
+        console.log(this.$refs.elevatorList[0])
+        this.$refs.elevatorList[i].requestUp(floor)
       }
     },
-    floorDownRequest(floor) {
-      const elevatorIndex = this.findElevatorToDeal(floor, DOWN)
-      if (elevatorIndex !== undefined) {
-        this.$refs.elevatorList[elevatorIndex].requestDown(floor)
+
+    floorDownRequest: function (floor) {
+      let i = this.findElevatorToDeal(floor, DOWN)
+      console.log('Requesting to ', i, ' elevator')
+      if (i !== undefined) {
+        this.$refs.elevatorList[i].requestDown(floor)
       }
     },
-    floorUpRequestDealt(floor) {
+    async floorUpRequestDealt(floor) {
+      // await this.$nextTick()
       this.$refs.floorPanels[floor - 1].upRequestHandled()
     },
-    floorDownRequestDealt(floor) {
+    async floorDownRequestDealt(floor) {
+      // await this.$nextTick();
       this.$refs.floorPanels[floor - 1].downRequestHandled()
     },
     findElevatorToDeal: function (floor, direction) {

@@ -17,7 +17,7 @@ export default {
   }
 }
 </script>
-<!-- 
+
 <style>
 html,
 body {
@@ -37,7 +37,6 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #060606;
 }
 
 .content-wrapper {
@@ -62,4 +61,4 @@ body {
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
 }
-</style> -->
+</style>
